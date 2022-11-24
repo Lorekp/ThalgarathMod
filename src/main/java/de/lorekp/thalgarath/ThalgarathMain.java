@@ -1,6 +1,7 @@
 package de.lorekp.thalgarath;
 
 import com.mojang.logging.LogUtils;
+import de.lorekp.thalgarath.item.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +23,8 @@ public class ThalgarathMain
     public ThalgarathMain()
     {
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModItems.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
