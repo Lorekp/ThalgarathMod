@@ -1,3 +1,5 @@
 {
-  "item.thalgarath.emptymanavial": "Empty Mana Vial"
+  "item.thalgarath.empty_vial": "Empty Vial",
+
+  "itemGroup.thalgarathtab": "Thalgarath"
 }

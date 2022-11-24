@@ -1,7 +1,6 @@
 package de.lorekp.thalgarath.item;
 
 import de.lorekp.thalgarath.ThalgarathMain;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -12,7 +11,7 @@ public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ThalgarathMain.MOD_ID);
 
-    public static final RegistryObject<Item> EMPTYMANAVIAL = ITEMS.register("emptymanavial", () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+    public static final RegistryObject<Item> EMPTYVIAL = ITEMS.register("empty_vial", () -> new Item(new Item.Properties().tab(ModCreativeModeTab.THALGARATH_TAB)));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
