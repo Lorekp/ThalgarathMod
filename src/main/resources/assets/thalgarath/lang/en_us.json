@@ -1,5 +1,8 @@
 {
   "item.thalgarath.empty_vial": "Empty Vial",
 
-  "itemGroup.thalgarathtab": "Thalgarath"
+  "itemGroup.thalgarathtab": "Thalgarath",
+
+  "key.category.thalgarath": "Thalgarath",
+  "key.thalgarath.example": "ExampleKey"
 }

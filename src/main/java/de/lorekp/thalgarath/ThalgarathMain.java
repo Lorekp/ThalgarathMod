@@ -2,6 +2,7 @@ package de.lorekp.thalgarath;
 
 import com.mojang.logging.LogUtils;
 import de.lorekp.thalgarath.item.ModItems;
+import de.lorekp.thalgarath.networking.ModMessages;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,7 +33,9 @@ public class ThalgarathMain
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        event.enqueueWork(() -> {
+            ModMessages.register();
+        });
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
