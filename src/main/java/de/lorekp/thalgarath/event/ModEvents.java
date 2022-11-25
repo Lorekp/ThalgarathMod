@@ -2,9 +2,12 @@ package de.lorekp.thalgarath.event;
 
 import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.mana.PlayerMana;
+import de.lorekp.thalgarath.networking.ModMessages;
+import de.lorekp.thalgarath.networking.packet.ManaDataSyncS2CPacket;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
@@ -12,6 +15,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -47,7 +51,7 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event){
-        if(event.isWasDeath()){
+        if(!event.isWasDeath()){
             event.getOriginal().getCapability(PlayerMana.PLAYER_MANA).ifPresent(oldStore -> {
                 event.getOriginal().getCapability(PlayerMana.PLAYER_MANA).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
@@ -63,8 +67,20 @@ public class ModEvents {
                 if(mana.getMana() < 100 && event.player.getRandom().nextFloat() < 0.005f){
                     mana.addMana(1);
                     event.player.sendSystemMessage(Component.literal("added Mana"));
+                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), (ServerPlayer) event.player);
                 }
             });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoinWorld(EntityJoinLevelEvent event){
+        if(!event.getLevel().isClientSide){
+            if(event.getEntity() instanceof ServerPlayer player){
+                player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
+                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
+                });
+            }
         }
     }
 }

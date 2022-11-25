@@ -1,6 +1,7 @@
 package de.lorekp.thalgarath.networking.packet;
 
 import de.lorekp.thalgarath.mana.PlayerMana;
+import de.lorekp.thalgarath.networking.ModMessages;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -33,6 +34,7 @@ public class ManaC2SPacket {
             player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
                 mana.subMana(1);
                 player.sendSystemMessage(Component.literal("Current Mana: " + mana.getMana()).withStyle(ChatFormatting.GOLD));
+                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
             });
         });
         return true;
