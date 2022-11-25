@@ -1,5 +1,6 @@
 package de.lorekp.thalgarath.networking.packet;
 
+import de.lorekp.thalgarath.mana.PlayerMana;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,11 @@ public class ManaC2SPacket {
             ServerPlayer player = context.getSender();
 
             player.sendSystemMessage(Component.translatable("Packet Successfully sent!").withStyle(ChatFormatting.AQUA));
+
+            player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
+                mana.subMana(1);
+                player.sendSystemMessage(Component.literal("Current Mana: " + mana.getMana()).withStyle(ChatFormatting.GOLD));
+            });
         });
         return true;
     }
