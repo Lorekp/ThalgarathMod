@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.lorekp.thalgarath.ThalgarathMain;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
@@ -23,7 +22,7 @@ public class ManaHudOverlay {
         GuiComponent.blit(poseStack, x +10, y - 48, 0, 0, 81, 7, 81, 7 );
         //get the current mana and draw the filled mana bar on top
         RenderSystem.setShaderTexture(0, MANA_BAR_FULL);
-        GuiComponent.blit(poseStack, x+10, y-48, 0, 7, 81/100*ClientManaData.getPlayerMana(), 7, 81, 7);
+        GuiComponent.blit(poseStack, x+10, y-48, 0, 0, Math.round((81.f/100.f)*ClientManaData.getPlayerMana()), 7, 81, 7);
 
     });
 }

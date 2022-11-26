@@ -1,6 +1,7 @@
 package de.lorekp.thalgarath.event;
 
 import de.lorekp.thalgarath.ThalgarathMain;
+import de.lorekp.thalgarath.client.ClientManaData;
 import de.lorekp.thalgarath.mana.PlayerMana;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaDataSyncS2CPacket;
@@ -65,8 +66,7 @@ public class ModEvents {
         if(event.side == LogicalSide.SERVER){
             event.player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
                 if(mana.getMana() < 100 && event.player.getRandom().nextFloat() < 0.005f){
-                    mana.addMana(1);
-                    event.player.sendSystemMessage(Component.literal("added Mana"));
+                    mana.addMana(10);
                     ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), (ServerPlayer) event.player);
                 }
             });
