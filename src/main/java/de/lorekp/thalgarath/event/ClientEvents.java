@@ -1,16 +1,21 @@
 package de.lorekp.thalgarath.event;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.lorekp.thalgarath.ThalgarathMain;
+import de.lorekp.thalgarath.client.ClientManaData;
 import de.lorekp.thalgarath.client.ManaHudOverlay;
-import de.lorekp.thalgarath.client.ThalgarathScreen;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.util.KeyBinding;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,12 +34,31 @@ public class ClientEvents {
         }
 
         @SubscribeEvent
-        public void onOpenScreen(ScreenEvent.Init.Pre event)
+        public static void whileOpenScreen(ScreenEvent event)
         {
+            if (event.getScreen().getClass() == InventoryScreen.class) {
+
+                for(int i = 0; i<event.getScreen().renderables.size(); i++){
+                    if(event.getScreen().renderables.get(i).getClass() == ImageButton.class){
+
+                    }
+                }
+
+            }
+        }
+
+        @SubscribeEvent
+        public static void onInitGui(ScreenEvent.Init event){
             if (event.getScreen() instanceof InventoryScreen) {
-                event.getScreen().getClass().getMethod("addWidget", GuiEventListener.class, new Button(100, 200, 56, 52, "", button -> {
-                    //Minecraft.getInstance().setScreen(new ThalgarathScreen());
-                }));
+
+
+                ImageButton button = new ImageButton(event.getScreen().width/2 - 88, event.getScreen().height/2 - 107, 28, 26, 0, 0, new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/inventory_tab256.png"), pButton -> {
+                    Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));
+                });
+
+
+                event.getScreen().renderables.add(event.getScreen().renderables.size()+1 , button);
+                event.addListener(button);
             }
         }
     }

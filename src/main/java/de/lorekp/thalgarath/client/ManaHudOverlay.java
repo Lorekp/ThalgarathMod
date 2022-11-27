@@ -2,7 +2,6 @@ package de.lorekp.thalgarath.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.lorekp.thalgarath.ThalgarathMain;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
