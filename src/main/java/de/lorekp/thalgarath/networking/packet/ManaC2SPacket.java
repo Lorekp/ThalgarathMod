@@ -34,7 +34,7 @@ public class ManaC2SPacket {
             player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
                 mana.subMana(1);
                 player.sendSystemMessage(Component.literal("Current Mana: " + mana.getMana()).withStyle(ChatFormatting.GOLD));
-                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
+                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), player);
             });
         });
         return true;

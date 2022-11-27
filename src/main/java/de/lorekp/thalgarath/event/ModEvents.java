@@ -67,7 +67,7 @@ public class ModEvents {
             event.player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
                 if(mana.getMana() < 100 && event.player.getRandom().nextFloat() < 0.005f){
                     mana.addMana(10);
-                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), (ServerPlayer) event.player);
+                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), (ServerPlayer) event.player);
                 }
             });
         }
@@ -78,7 +78,7 @@ public class ModEvents {
         if(!event.getLevel().isClientSide){
             if(event.getEntity() instanceof ServerPlayer player){
                 player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
-                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
+                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), player);
                 });
             }
         }

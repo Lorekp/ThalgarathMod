@@ -12,16 +12,21 @@ import java.util.function.Supplier;
 
 public class ManaDataSyncS2CPacket {
     private final int mana;
-
-    public ManaDataSyncS2CPacket(int mana){
+    private final int maxMana;
+    public ManaDataSyncS2CPacket(int mana, int maxMana){
         this.mana = mana;
+        this.maxMana = maxMana;
     }
     public ManaDataSyncS2CPacket(FriendlyByteBuf buf){
+
         this.mana = buf.readInt();
+        this.maxMana = buf.readInt();
     }
 
     public void toBytes(FriendlyByteBuf buf){
+
         buf.writeInt(mana);
+        buf.writeInt(maxMana);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier){
@@ -29,7 +34,8 @@ public class ManaDataSyncS2CPacket {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             //clientside
-            ClientManaData.set(mana);
+            ClientManaData.setPlayerMana(mana);
+            ClientManaData.setMaxMana(maxMana);
         });
         return true;
     }

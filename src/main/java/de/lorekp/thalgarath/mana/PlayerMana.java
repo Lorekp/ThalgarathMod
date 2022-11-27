@@ -12,10 +12,18 @@ public class PlayerMana {
     public static Capability<PlayerMana> PLAYER_MANA = CapabilityManager.get(new CapabilityToken<PlayerMana>() { });
     private int mana;
     private final int MIN_MANA = 0;
-    private final int MAX_MANA = 100;
+    public int MAX_MANA = 100;
 
     public int getMana(){
         return mana;
+    }
+
+    public int getMAX_MANA(){
+        return MAX_MANA;
+    }
+
+    public void setMAX_MANA(int maxMana){
+        this.MAX_MANA = maxMana;
     }
 
     public void addMana(int add){
