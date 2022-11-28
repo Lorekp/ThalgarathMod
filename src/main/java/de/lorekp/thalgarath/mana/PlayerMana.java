@@ -43,6 +43,6 @@ public class PlayerMana {
     }
 
     public void loadNBTData(CompoundTag nbt){
-        mana = nbt.getInt("thirst");
+        mana = nbt.getInt("mana");
     }
 }

@@ -5,6 +5,8 @@ import de.lorekp.thalgarath.client.ClientManaData;
 import de.lorekp.thalgarath.mana.PlayerMana;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaDataSyncS2CPacket;
+import de.lorekp.thalgarath.networking.packet.SkillDataSyncS2CPacket;
+import de.lorekp.thalgarath.skill.PlayerSkill;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +47,22 @@ public class ModEvents {
                         return LazyOptional.empty();
                     }
                 };
-                event.addCapability(new ResourceLocation(ThalgarathMain.MOD_ID, "properties"), provider);
+                event.addCapability(new ResourceLocation(ThalgarathMain.MOD_ID, "mana"), provider);
+            }
+            if(!event.getObject().getCapability(PlayerSkill.PLAYER_SKILL).isPresent()){
+                PlayerSkill playerSkill = new PlayerSkill();
+                LazyOptional<PlayerSkill> optional = LazyOptional.of(() -> playerSkill);
+
+                ICapabilityProvider provider = new ICapabilityProvider() {
+                    @Override
+                    public <T> LazyOptional<T> getCapability( Capability<T> cap, @Nullable Direction direction) {
+                        if (cap == PlayerSkill.PLAYER_SKILL){
+                            return optional.cast();
+                        }
+                        return LazyOptional.empty();
+                    }
+                };
+                event.addCapability((new ResourceLocation(ThalgarathMain.MOD_ID, "skill")), provider);
             }
         }
     }
@@ -59,6 +76,11 @@ public class ModEvents {
                 });
             });
         }
+        event.getOriginal().getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(oldStore -> {
+            event.getOriginal().getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(newStore -> {
+                newStore.copyFrom(oldStore);
+            });
+        });
     }
 
     @SubscribeEvent
@@ -76,9 +98,13 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerJoinWorld(EntityJoinLevelEvent event){
         if(!event.getLevel().isClientSide){
-            if(event.getEntity() instanceof ServerPlayer player){
+            if(event.getEntity() instanceof ServerPlayer player) {
                 player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
                     ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), player);
+                });
+
+                player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(skill -> {
+                    ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(skill.getSkill()), player);
                 });
             }
         }

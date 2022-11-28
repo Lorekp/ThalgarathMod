@@ -3,6 +3,8 @@ package de.lorekp.thalgarath.networking;
 import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.networking.packet.ManaDataSyncS2CPacket;
+import de.lorekp.thalgarath.networking.packet.SkillC2SPacket;
+import de.lorekp.thalgarath.networking.packet.SkillDataSyncS2CPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -39,6 +41,18 @@ public class ModMessages {
                 .decoder(ManaDataSyncS2CPacket::new)
                 .encoder(ManaDataSyncS2CPacket::toBytes)
                 .consumerMainThread(ManaDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(SkillC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SkillC2SPacket::new)
+                .encoder(SkillC2SPacket::toBytes)
+                .consumerMainThread(SkillC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(SkillDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SkillDataSyncS2CPacket::new)
+                .encoder(SkillDataSyncS2CPacket::toBytes)
+                .consumerMainThread(SkillDataSyncS2CPacket::handle)
                 .add();
     }
 

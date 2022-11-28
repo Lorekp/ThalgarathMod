@@ -26,7 +26,7 @@ public class ClientEvents {
     @Mod.EventBusSubscriber(modid = ThalgarathMain.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
 
-        private static ImageButton button;
+        private static final ResourceLocation TABS_LOCATION = new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/inventory_buttons.png");
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event){
             if(KeyBinding.EXAMPLE_KEY.consumeClick()){
@@ -36,19 +36,19 @@ public class ClientEvents {
         }
 
         @SubscribeEvent
-        public static void whileOpenScreen(ScreenEvent event)
-        {
-        }
-
-        @SubscribeEvent
         public static void onInitGui(ScreenEvent.Init event){
             if (event.getScreen() instanceof InventoryScreen) {
 
-                button = new ImageButton(event.getScreen().width/2 - 88, event.getScreen().height/2 - 107, 28, 26, 0, 0, new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/inventory_tab256.png"), pButton -> {
+                ImageButton thalmButton = new ImageButton(event.getScreen().width / 2 - 60, event.getScreen().height / 2 - 107, 28, 24, 0, 0, TABS_LOCATION, pButton -> {
                     Minecraft.getInstance().setScreen(new ThalgarathScreen(Component.literal("ThalgarathScreen")));
                 });
-                event.getScreen().renderables.add(button);
-                event.addListener(button);
+                event.getScreen().renderables.add(thalmButton);
+                event.addListener(thalmButton);
+
+                ImageButton dInvButton = new ImageButton(event.getScreen().width / 2 - 88, event.getScreen().height / 2 - 107, 28, 29, 84, 0, TABS_LOCATION, pButton -> {
+                });
+                event.getScreen().renderables.add(dInvButton);
+                event.addListener(dInvButton);
             }
         }
     }
