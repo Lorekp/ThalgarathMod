@@ -25,6 +25,7 @@ public class ClientEvents {
     @Mod.EventBusSubscriber(modid = ThalgarathMain.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
 
+        static ImageButton button;
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event){
             if(KeyBinding.EXAMPLE_KEY.consumeClick()){
@@ -36,28 +37,16 @@ public class ClientEvents {
         @SubscribeEvent
         public static void whileOpenScreen(ScreenEvent event)
         {
-            if (event.getScreen().getClass() == InventoryScreen.class) {
-
-                for(int i = 0; i<event.getScreen().renderables.size(); i++){
-                    if(event.getScreen().renderables.get(i).getClass() == ImageButton.class){
-
-                    }
-                }
-
-            }
         }
 
         @SubscribeEvent
         public static void onInitGui(ScreenEvent.Init event){
             if (event.getScreen() instanceof InventoryScreen) {
 
-
-                ImageButton button = new ImageButton(event.getScreen().width/2 - 88, event.getScreen().height/2 - 107, 28, 26, 0, 0, new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/inventory_tab256.png"), pButton -> {
+                button = new ImageButton(event.getScreen().width/2 - 88, event.getScreen().height/2 - 107, 28, 26, 0, 0, new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/inventory_tab256.png"), pButton -> {
                     Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));
                 });
-
-
-                event.getScreen().renderables.add(event.getScreen().renderables.size()+1 , button);
+                event.getScreen().renderables.add(button);
                 event.addListener(button);
             }
         }
