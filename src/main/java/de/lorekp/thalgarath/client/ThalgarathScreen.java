@@ -11,9 +11,11 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ThalgarathScreen extends Screen {
 
-    ResourceLocation THALGARATH_SCREEN = new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/thalm_gui_clean.png")
+    ResourceLocation THALGARATH_SCREEN = new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/thalm_gui_clean.png");
+    private float xMouse;
+    private float yMouse;
 
-    protected ThalgarathScreen(Component pTitle) {
+    public ThalgarathScreen(Component pTitle) {
         super(pTitle);
     }
 
@@ -26,10 +28,13 @@ public class ThalgarathScreen extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, THALGARATH_SCREEN);
-        this.blit(pPoseStack, (Minecraft.getInstance().getWindow().getWidth() - 176)/2, (Minecraft.getInstance().getWindow().getHeight() - 166)/2, 0, 0, 0, 176, 166, 176, 166);
+        this.blit(pPoseStack, (this.width - 176)/2, (this.height - 166)/2, 0, 0, 0, 176, 166, 176, 166);
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pPoseStack);
         this.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
+        this.xMouse = (float)pMouseX;
+        this.yMouse = (float)pMouseY;
     }
 }

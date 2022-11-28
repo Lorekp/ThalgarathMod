@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.client.ClientManaData;
 import de.lorekp.thalgarath.client.ManaHudOverlay;
+import de.lorekp.thalgarath.client.ThalgarathScreen;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.util.KeyBinding;
@@ -25,7 +26,7 @@ public class ClientEvents {
     @Mod.EventBusSubscriber(modid = ThalgarathMain.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
 
-        static ImageButton button;
+        private static ImageButton button;
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event){
             if(KeyBinding.EXAMPLE_KEY.consumeClick()){
@@ -44,7 +45,7 @@ public class ClientEvents {
             if (event.getScreen() instanceof InventoryScreen) {
 
                 button = new ImageButton(event.getScreen().width/2 - 88, event.getScreen().height/2 - 107, 28, 26, 0, 0, new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/inventory_tab256.png"), pButton -> {
-                    Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));
+                    Minecraft.getInstance().setScreen(new ThalgarathScreen(Component.literal("ThalgarathScreen")));
                 });
                 event.getScreen().renderables.add(button);
                 event.addListener(button);
