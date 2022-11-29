@@ -11,8 +11,13 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ManaC2SPacket {
-    public ManaC2SPacket(){
 
+    private static int amountToAdd;
+    private static int newMaxMana;
+    public ManaC2SPacket(int amountToAdd, int newMaxMana){
+        if (newMaxMana!=0)
+            this.newMaxMana = newMaxMana;
+        this.amountToAdd = amountToAdd;
     }
     public ManaC2SPacket(FriendlyByteBuf buf){
 
@@ -29,11 +34,9 @@ public class ManaC2SPacket {
             //serverside
             ServerPlayer player = context.getSender();
 
-            player.sendSystemMessage(Component.translatable("Packet Successfully sent!").withStyle(ChatFormatting.AQUA));
-
             player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
-                mana.subMana(1);
-                player.sendSystemMessage(Component.literal("Current Mana: " + mana.getMana()).withStyle(ChatFormatting.GOLD));
+                mana.addMana(amountToAdd);
+                mana.setMAX_MANA(newMaxMana);
                 ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), player);
             });
         });

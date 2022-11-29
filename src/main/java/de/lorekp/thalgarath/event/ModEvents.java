@@ -2,16 +2,18 @@ package de.lorekp.thalgarath.event;
 
 import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.client.ClientManaData;
+import de.lorekp.thalgarath.client.ClientSkillData;
 import de.lorekp.thalgarath.mana.PlayerMana;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaDataSyncS2CPacket;
 import de.lorekp.thalgarath.networking.packet.SkillDataSyncS2CPacket;
 import de.lorekp.thalgarath.skill.PlayerSkill;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -19,17 +21,18 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 @Mod.EventBusSubscriber(modid = ThalgarathMain.MOD_ID)
 public class ModEvents {
-
+static int tickCounter = 0;
 
     @SubscribeEvent
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event){
@@ -86,12 +89,20 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event){
         if(event.side == LogicalSide.SERVER){
-            event.player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
-                if(mana.getMana() < 100 && event.player.getRandom().nextFloat() < 0.005f){
-                    mana.addMana(10);
-                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), (ServerPlayer) event.player);
-                }
+            //adjust player attackspeed(1%perlvl)
+            event.player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
+                event.player.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(4 + playerSkill.getSkillAt(1) * 0.01F);
             });
+            //every second (all players):
+            if (tickCounter % 20 == 0)
+            {
+                event.player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
+                    mana.addMana(ClientSkillData.getPlayerSkillAt(5));
+                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), (ServerPlayer) event.player);
+                });
+                tickCounter = 0;
+            }else
+                tickCounter++;
         }
     }
 
@@ -108,6 +119,36 @@ public class ModEvents {
                 });
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onEntityAttack(LivingHurtEvent event){
+        if(event.getSource().getEntity() instanceof ServerPlayer player){
+            //adjust player attack damage
+            player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
+                event.setAmount(event.getAmount() * (playerSkill.getSkillAt(0) * 0.01F));
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityHurt(LivingHurtEvent event){
+        if (event.getEntity() instanceof ServerPlayer player){
+            //adjust damage received (max 50% damage reduction at 100endurance/defense)
+            player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
+                if (isSpecialDamageType(event.getSource()))
+                    event.setAmount(event.getAmount() - playerSkill.getSkillAt(2) * 0.005F);
+                else
+                    event.setAmount(event.getAmount() - playerSkill.getSkillAt(3) * 0.005F);
+            });
+        }
+    }
+
+    private static boolean isSpecialDamageType(DamageSource source){
+        if(source == DamageSource.MAGIC || source == DamageSource.FREEZE || source == DamageSource.WITHER || source == DamageSource.DRAGON_BREATH || source == DamageSource.DROWN || source == DamageSource.LIGHTNING_BOLT || source == DamageSource.HOT_FLOOR || source == DamageSource.IN_FIRE || source == DamageSource.ON_FIRE || source == DamageSource.LAVA || source == DamageSource.DRY_OUT)
+            return true;
+        else
+            return false;
     }
 }
 

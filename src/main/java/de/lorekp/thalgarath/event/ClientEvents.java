@@ -31,7 +31,7 @@ public class ClientEvents {
         public static void onKeyInput(InputEvent.Key event){
             if(KeyBinding.EXAMPLE_KEY.consumeClick()){
                 Minecraft.getInstance().player.sendSystemMessage(Component.literal("Pressed \"O\" Key!"));
-                ModMessages.sendToServer(new ManaC2SPacket());
+                ModMessages.sendToServer(new ManaC2SPacket(1, 0));
             }
         }
 

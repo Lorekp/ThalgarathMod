@@ -18,9 +18,16 @@ public class PlayerSkill {
         return skill;
     }
 
+    public int getSkillAt(int index){
+        return skill[index];
+    }
+
     public void addSkill(int index){
-        this.skill[index] = this.skill[index] + 1;
-        Minecraft.getInstance().player.sendSystemMessage(Component.translatable("PlayerSkill at " + index + " = " + this.skill[index]));
+        if (index == 2 || index == 3){
+            this.skill[index] = Math.min(this.skill[index] + 1, 100);
+        }
+        else
+            this.skill[index] = this.skill[index] + 1;
     }
     public void copyFrom(de.lorekp.thalgarath.skill.PlayerSkill source){
         this.skill = source.skill;
@@ -33,7 +40,7 @@ public class PlayerSkill {
         nbt.putInt("Defense", skill[3]);
         nbt.putInt("Wisdom", skill[4]);
         nbt.putInt("Intelligence", skill[5]);
-        nbt.putInt("Charisma", skill[6]);
+        nbt.putInt("Awareness", skill[6]);
         nbt.putInt("Luck", skill[7]);
 
     }
@@ -45,7 +52,7 @@ public class PlayerSkill {
         skill[3] = nbt.getInt("Defense");
         skill[4] = nbt.getInt("Wisdom");
         skill[5] = nbt.getInt("Intelligence");
-        skill[6] = nbt.getInt("Charisma");
+        skill[6] = nbt.getInt("Awareness");
         skill[7] = nbt.getInt("Luck");
     }
 }

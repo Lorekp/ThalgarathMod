@@ -9,6 +9,7 @@ import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.networking.packet.SkillC2SPacket;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -47,25 +48,42 @@ public class ThalgarathScreen extends Screen {
         //StrengthButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, BUTTONS_LOCATION, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(0));
-            Minecraft.getInstance().player.sendSystemMessage(Component.literal("Current strength: " + ClientSkillData.getPlayerSkill()[0]));
         }));
         //DexterityButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 78, this.topPos + 27, 17, 15, 128, 0, BUTTONS_LOCATION, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(1));
-            Minecraft.getInstance().player.sendSystemMessage(Component.literal("Current strength: " + ClientSkillData.getPlayerSkill()[1]));
         }));
         //EnduranceButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 44, 16, 15, 145, 0, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
+        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 44, 16, 15, 145, 0, BUTTONS_LOCATION, pButton -> {
+            if (ClientSkillData.getPlayerSkillAt(2) < 100)
+                ModMessages.sendToServer(new SkillC2SPacket(2));
+            else
+                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Max Endurance of 100 reached!").withStyle(ChatFormatting.DARK_RED));
+        }));
         //DefenseButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 60, 14, 16, 161, 0, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
+        this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 60, 14, 16, 161, 0, BUTTONS_LOCATION, pButton -> {
+            if (ClientSkillData.getPlayerSkillAt(3) < 100)
+                ModMessages.sendToServer(new SkillC2SPacket(3));
+            else
+                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Max Defense of 100 reached!").withStyle(ChatFormatting.DARK_RED));
+        }));
         //WisdomButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 10, 16, 12, 112, 34, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
+        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 10, 16, 12, 112, 34, BUTTONS_LOCATION, pButton -> {
+            ModMessages.sendToServer(new SkillC2SPacket(4));
+            ModMessages.sendToServer(new ManaC2SPacket(0, 100 + ClientSkillData.getPlayerSkillAt(4)));
+        }));
         //IntelligenceButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 25, 16, 15, 128, 30, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
-        //CharismaButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 42, 16, 16, 144, 30, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
+        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 25, 16, 15, 128, 30, BUTTONS_LOCATION, pButton -> {
+            ModMessages.sendToServer(new SkillC2SPacket(5));
+        }));
+        //AwarenessButton
+        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 42, 16, 16, 144, 30, BUTTONS_LOCATION, pButton -> {
+            ModMessages.sendToServer(new SkillC2SPacket(6));
+        }));
         //LuckButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 124, this.topPos + 59, 13, 17, 160, 32, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
+        this.addRenderableWidget(new ImageButton(this.leftPos + 124, this.topPos + 59, 13, 17, 160, 32, BUTTONS_LOCATION, pButton -> {
+            ModMessages.sendToServer(new SkillC2SPacket(7));
+        }));
     }
 
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pX, int pY){
@@ -79,14 +97,29 @@ public class ThalgarathScreen extends Screen {
     }
 
     protected void renderStats(PoseStack pPoseStack, float pPartialTick, int pX, int pY){
-        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        //RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-       // RenderSystem.setShaderTexture(0, );
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, BUTTONS_LOCATION);
+        int posX = this.leftPos;
+        int posY = this.topPos + 12;
+        int drawHeight = 0;
+        for (int i = 0; i < 8; i++) {
+            int skill = ClientSkillData.getPlayerSkillAt(i);
+            int secondRow = 0;
+            if (drawHeight > 3) {drawHeight = 0;}
+            if (i > 3){secondRow = 44;}
+            this.blit(pPoseStack, posX + secondRow + 114, posY + drawHeight*17, this.lastDigit(skill) * 7, 248, 6, 8, 256, 256);
+            this.blit(pPoseStack, posX + secondRow + 105, posY + drawHeight*17, this.secondToLastDigit(skill) * 7, 248, 6, 8, 256, 256);
+            this.blit(pPoseStack, posX + secondRow + 96, posY + drawHeight*17, this.thirdToLastDigit(skill) * 7, 248, 6, 8, 256, 256);
+            drawHeight++;
+        }
+
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         this.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
+        this.renderStats(pPoseStack, pPartialTick, pMouseX, pMouseY);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.xMouse = (float)pMouseX;
         this.yMouse = (float)pMouseY;
@@ -141,5 +174,18 @@ public class ThalgarathScreen extends Screen {
         posestack.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
+    }
+
+    private int lastDigit(int number) { return number % 10; }
+    private int secondToLastDigit(int number) {
+        if (number < 10)
+            return 10;
+        return (number/10) % 10;
+    }
+
+    private int thirdToLastDigit(int number) {
+        if (number < 100)
+            return 10;
+        return (number/100) % 10;
     }
 }

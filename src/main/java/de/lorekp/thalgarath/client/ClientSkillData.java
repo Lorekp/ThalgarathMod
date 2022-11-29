@@ -13,4 +13,8 @@ public class ClientSkillData {
     public static int[] getPlayerSkill(){
         return playerSkills;
     }
+
+    public static int getPlayerSkillAt(int index){
+        return playerSkills[index];
+    }
 }

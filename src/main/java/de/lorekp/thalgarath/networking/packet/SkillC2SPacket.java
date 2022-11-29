@@ -17,7 +17,6 @@ public class SkillC2SPacket {
 
     public SkillC2SPacket(int index){
         SkillC2SPacket.index = index;
-        Minecraft.getInstance().player.sendSystemMessage(Component.literal("index " + index + "| this.index " + SkillC2SPacket.index));
     }
     public SkillC2SPacket(FriendlyByteBuf buf){
 
@@ -33,8 +32,6 @@ public class SkillC2SPacket {
         context.enqueueWork(() -> {
             //serverside
             ServerPlayer player = context.getSender();
-
-            player.sendSystemMessage(Component.translatable("Packet Successfully sent (skill)!").withStyle(ChatFormatting.AQUA));
             player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
                 playerSkill.addSkill(index);
                 ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(playerSkill.getSkill()), player);
