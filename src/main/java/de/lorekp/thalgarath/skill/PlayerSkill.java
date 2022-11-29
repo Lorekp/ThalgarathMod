@@ -1,6 +1,8 @@
 package de.lorekp.thalgarath.skill;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -16,8 +18,9 @@ public class PlayerSkill {
         return skill;
     }
 
-    public void addSkill(int index, int add){
-        this.skill[index] = this.skill[index] + add;
+    public void addSkill(int index){
+        this.skill[index] = this.skill[index] + 1;
+        Minecraft.getInstance().player.sendSystemMessage(Component.translatable("PlayerSkill at " + index + " = " + this.skill[index]));
     }
     public void copyFrom(de.lorekp.thalgarath.skill.PlayerSkill source){
         this.skill = source.skill;

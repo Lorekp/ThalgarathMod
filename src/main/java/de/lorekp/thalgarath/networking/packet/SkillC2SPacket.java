@@ -4,6 +4,7 @@ import de.lorekp.thalgarath.mana.PlayerMana;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.skill.PlayerSkill;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,12 +13,11 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SkillC2SPacket {
-    private int index;
-    private int add;
+    private static int index;
 
-    public SkillC2SPacket(int index, int add){
-        this.index = index;
-        this.add = add;
+    public SkillC2SPacket(int index){
+        SkillC2SPacket.index = index;
+        Minecraft.getInstance().player.sendSystemMessage(Component.literal("index " + index + "| this.index " + SkillC2SPacket.index));
     }
     public SkillC2SPacket(FriendlyByteBuf buf){
 
@@ -36,7 +36,7 @@ public class SkillC2SPacket {
 
             player.sendSystemMessage(Component.translatable("Packet Successfully sent (skill)!").withStyle(ChatFormatting.AQUA));
             player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
-                playerSkill.addSkill(index, add);
+                playerSkill.addSkill(index);
                 ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(playerSkill.getSkill()), player);
             });
         });

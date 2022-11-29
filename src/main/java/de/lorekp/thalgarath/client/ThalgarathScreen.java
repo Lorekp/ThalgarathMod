@@ -46,12 +46,14 @@ public class ThalgarathScreen extends Screen {
 
         //StrengthButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, BUTTONS_LOCATION, pButton -> {
+            ModMessages.sendToServer(new SkillC2SPacket(0));
             Minecraft.getInstance().player.sendSystemMessage(Component.literal("Current strength: " + ClientSkillData.getPlayerSkill()[0]));
-            ModMessages.sendToServer(new SkillC2SPacket(0, 1));
-            Minecraft.getInstance().player.sendSystemMessage(Component.literal("Current strength: " + ClientSkillData.getPlayerSkill()[1]));
         }));
         //DexterityButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 78, this.topPos + 27, 17, 15, 128, 0, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
+        this.addRenderableWidget(new ImageButton(this.leftPos + 78, this.topPos + 27, 17, 15, 128, 0, BUTTONS_LOCATION, pButton -> {
+            ModMessages.sendToServer(new SkillC2SPacket(1));
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal("Current strength: " + ClientSkillData.getPlayerSkill()[1]));
+        }));
         //EnduranceButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 44, 16, 15, 145, 0, BUTTONS_LOCATION, pButton -> {Minecraft.getInstance().player.sendSystemMessage(Component.literal("Button"));}));
         //DefenseButton
@@ -74,6 +76,12 @@ public class ThalgarathScreen extends Screen {
         int posY = this.topPos;
         this.blit(pPoseStack, posX, posY, 0, 0, 176, 166, 256, 256);
         renderEntityInInventory(posX + 51, posY + 75, 30, (float)(posX + 51) - this.xMouse, (float)(posY + 75 - 50) - this.yMouse, this.minecraft.player);
+    }
+
+    protected void renderStats(PoseStack pPoseStack, float pPartialTick, int pX, int pY){
+        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        //RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+       // RenderSystem.setShaderTexture(0, );
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
