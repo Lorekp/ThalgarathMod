@@ -8,7 +8,10 @@ import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaDataSyncS2CPacket;
 import de.lorekp.thalgarath.networking.packet.SkillDataSyncS2CPacket;
 import de.lorekp.thalgarath.skill.PlayerSkill;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -33,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = ThalgarathMain.MOD_ID)
 public class ModEvents {
-static int tickCounter = 0;
+    static int tickCounter = 0;
 
     @SubscribeEvent
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event){
@@ -94,23 +97,34 @@ static int tickCounter = 0;
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event){
-        if(event.side == LogicalSide.SERVER){
-            //adjust player attackspeed(1%perlvl)
+        if(event.side.isServer() && (Minecraft.getInstance().player != null)){
+            //adjust player attackspeed(1%perlvl), luck(1% of luck potion per level)
             event.player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
                 event.player.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(4 + (playerSkill.getSkillAt(1) * 0.01F) * 4);
                 event.player.getAttribute(Attributes.LUCK).setBaseValue(0.01F * playerSkill.getSkillAt(7));
             });
-            //every second (all players):
-            if (tickCounter % 20 == 0)
-            {
-                event.player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
-                    mana.addMana(ClientSkillData.getPlayerSkillAt(5));
-                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), (ServerPlayer) event.player);
-                });
-                tickCounter = 0;
-            }else
-                tickCounter++;
+
         }
+    }
+
+    @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event){
+        //every second (all players):
+        if (event.phase.equals(TickEvent.Phase.START))
+        {
+            if (tickCounter % 20 == 0) {
+                for (int i = 0; i < event.getServer().getPlayerList().getPlayerCount(); i++) {
+                    int finalI = i;
+                    event.getServer().getPlayerList().getPlayers().get(i).getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
+                        mana.addMana(1 + ClientSkillData.getPlayerSkillAt(5) * 0.01F);
+                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), event.getServer().getPlayerList().getPlayers().get(finalI));
+                    });
+                }
+                tickCounter = 0;
+            }
+        }else
+            tickCounter++;
+        event.getServer().sendSystemMessage(Component.literal("t:" + tickCounter));
     }
 
     @SubscribeEvent

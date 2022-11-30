@@ -1,22 +1,22 @@
 package de.lorekp.thalgarath.client;
 
 public class ClientManaData {
-    private static int playerMana;
+    private static float playerMana;
 
-    private static int MAX_MANA;
+    private static float MAX_MANA;
 
-    public static void setPlayerMana(int mana){
+    public static void setPlayerMana(float mana){
         ClientManaData.playerMana = mana;
     }
 
-    public static void setMaxMana(int maxMana){
+    public static void setMaxMana(float maxMana){
         ClientManaData.MAX_MANA = maxMana;
     }
 
-    public static int getMaxMana(){
+    public static float getMaxMana(){
         return MAX_MANA;
     }
-    public static int getPlayerMana(){
+    public static float getPlayerMana(){
         return playerMana;
     }
 }

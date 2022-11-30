@@ -10,23 +10,23 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 public class PlayerMana {
 
     public static Capability<PlayerMana> PLAYER_MANA = CapabilityManager.get(new CapabilityToken<PlayerMana>() { });
-    private int mana;
+    private float mana;
     private final int MIN_MANA = 0;
-    public int MAX_MANA = 100;
+    public float MAX_MANA = 100;
 
-    public int getMana(){
+    public float getMana(){
         return mana;
     }
 
-    public int getMAX_MANA(){
+    public float getMAX_MANA(){
         return MAX_MANA;
     }
 
-    public void setMAX_MANA(int maxMana){
+    public void setMAX_MANA(float maxMana){
         this.MAX_MANA = maxMana;
     }
 
-    public void addMana(int add){
+    public void addMana(float add){
         this.mana = Math.min(mana + add, MAX_MANA);
     }
 
@@ -39,10 +39,10 @@ public class PlayerMana {
     }
 
     public void saveNBTData(CompoundTag nbt){
-        nbt.putInt("mana", mana);
+        nbt.putFloat("mana", mana);
     }
 
     public void loadNBTData(CompoundTag nbt){
-        mana = nbt.getInt("mana");
+        mana = nbt.getFloat("mana");
     }
 }

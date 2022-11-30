@@ -12,12 +12,12 @@ import java.util.function.Supplier;
 
 public class ManaC2SPacket {
 
-    private static int amountToAdd;
-    private static int newMaxMana;
-    public ManaC2SPacket(int amountToAdd, int newMaxMana){
+    private static float amountToAdd;
+    private static float newMaxMana;
+    public ManaC2SPacket(float amountToAdd, float newMaxMana){
         if (newMaxMana!=0)
-            this.newMaxMana = newMaxMana;
-        this.amountToAdd = amountToAdd;
+            ManaC2SPacket.newMaxMana = newMaxMana;
+        ManaC2SPacket.amountToAdd = amountToAdd;
     }
     public ManaC2SPacket(FriendlyByteBuf buf){
 

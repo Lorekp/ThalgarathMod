@@ -45,6 +45,7 @@ public class ThalgarathScreen extends Screen {
         //ThalmButton
         this.addRenderableWidget(new ImageButton(this.width/2 - 60, this.height/2 - 107, 28, 28, 28, 0, BUTTONS_LOCATION, pButton -> {}));
 
+        //SkillButtons:
         //StrengthButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, BUTTONS_LOCATION, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(0));
@@ -83,6 +84,32 @@ public class ThalgarathScreen extends Screen {
         //LuckButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 124, this.topPos + 59, 13, 17, 160, 32, BUTTONS_LOCATION, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(7));
+        }));
+
+        //PathButtons:
+        //WindButton
+        this.addRenderableWidget(new ImageButton(this.leftPos + 10, this.topPos + 87, 50, 21, 106, 172, BUTTONS_LOCATION, pButton -> {
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal("WindButton").withStyle(ChatFormatting.AQUA));
+        }));
+        //WaterButton
+        this.addRenderableWidget(new ImageButton(this.leftPos + 63, this.topPos + 87, 50, 21, 156, 172, BUTTONS_LOCATION, pButton -> {
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal("WaterButton").withStyle(ChatFormatting.DARK_BLUE));
+        }));
+        //FireButton
+        this.addRenderableWidget(new ImageButton(this.leftPos + 10, this.topPos + 112, 50, 21, 206, 172, BUTTONS_LOCATION, pButton -> {
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal("FireButton").withStyle(ChatFormatting.RED));
+        }));
+        //EarthButton
+        this.addRenderableWidget(new ImageButton(this.leftPos + 63, this.topPos + 112, 50, 21, 106, 214, BUTTONS_LOCATION, pButton -> {
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal("EarthButton").withStyle(ChatFormatting.DARK_GRAY));
+        }));
+        //LightButton
+        this.addRenderableWidget(new ImageButton(this.leftPos + 116, this.topPos + 87, 50, 21, 156, 214, BUTTONS_LOCATION, pButton -> {
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal("LightButton").withStyle(ChatFormatting.YELLOW));
+        }));
+        //DarkButton
+        this.addRenderableWidget(new ImageButton(this.leftPos + 116, this.topPos + 112, 50, 21, 206, 214, BUTTONS_LOCATION, pButton -> {
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal("DarkButton").withStyle(ChatFormatting.DARK_PURPLE));
         }));
     }
 
