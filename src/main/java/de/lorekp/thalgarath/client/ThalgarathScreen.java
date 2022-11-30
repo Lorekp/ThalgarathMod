@@ -11,6 +11,7 @@ import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.networking.packet.SkillC2SPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class ThalgarathScreen extends Screen {
 
@@ -40,6 +42,7 @@ public class ThalgarathScreen extends Screen {
         this.topPos = (this.height - 166) / 2;
         //InvButton
         this.addRenderableWidget(new ImageButton(this.width/2 - 88, this.height/2 - 107, 28, 26, 56, 0, BUTTONS_LOCATION, pButton -> {
+            assert Minecraft.getInstance().player != null;
             Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
         }));
         //ThalmButton
@@ -58,15 +61,19 @@ public class ThalgarathScreen extends Screen {
         this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 44, 16, 15, 145, 0, BUTTONS_LOCATION, pButton -> {
             if (ClientSkillData.getPlayerSkillAt(2) < 100)
                 ModMessages.sendToServer(new SkillC2SPacket(2));
-            else
+            else {
+                assert Minecraft.getInstance().player != null;
                 Minecraft.getInstance().player.sendSystemMessage(Component.literal("Max Endurance of 100 reached!").withStyle(ChatFormatting.DARK_RED));
+            }
         }));
         //DefenseButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 60, 14, 16, 161, 0, BUTTONS_LOCATION, pButton -> {
             if (ClientSkillData.getPlayerSkillAt(3) < 100)
                 ModMessages.sendToServer(new SkillC2SPacket(3));
-            else
+            else {
+                assert Minecraft.getInstance().player != null;
                 Minecraft.getInstance().player.sendSystemMessage(Component.literal("Max Defense of 100 reached!").withStyle(ChatFormatting.DARK_RED));
+            }
         }));
         //WisdomButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 10, 16, 12, 112, 34, BUTTONS_LOCATION, pButton -> {
@@ -119,7 +126,8 @@ public class ThalgarathScreen extends Screen {
         RenderSystem.setShaderTexture(0, THALGARATH_SCREEN);
         int posX = this.leftPos;
         int posY = this.topPos;
-        this.blit(pPoseStack, posX, posY, 0, 0, 176, 166, 256, 256);
+        blit(pPoseStack, posX, posY, 0, 0, 176, 166, 256, 256);
+        assert this.minecraft != null;
         renderEntityInInventory(posX + 51, posY + 75, 30, (float)(posX + 51) - this.xMouse, (float)(posY + 75 - 50) - this.yMouse, this.minecraft.player);
     }
 
@@ -135,15 +143,15 @@ public class ThalgarathScreen extends Screen {
             int secondRow = 0;
             if (drawHeight > 3) {drawHeight = 0;}
             if (i > 3){secondRow = 44;}
-            this.blit(pPoseStack, posX + secondRow + 114, posY + drawHeight*17, this.lastDigit(skill) * 7, 248, 6, 8, 256, 256);
-            this.blit(pPoseStack, posX + secondRow + 105, posY + drawHeight*17, this.secondToLastDigit(skill) * 7, 248, 6, 8, 256, 256);
-            this.blit(pPoseStack, posX + secondRow + 96, posY + drawHeight*17, this.thirdToLastDigit(skill) * 7, 248, 6, 8, 256, 256);
+            blit(pPoseStack, posX + secondRow + 114, posY + drawHeight*17, this.lastDigit(skill) * 7, 248, 6, 8, 256, 256);
+            blit(pPoseStack, posX + secondRow + 105, posY + drawHeight*17, this.secondToLastDigit(skill) * 7, 248, 6, 8, 256, 256);
+            blit(pPoseStack, posX + secondRow + 96, posY + drawHeight*17, this.thirdToLastDigit(skill) * 7, 248, 6, 8, 256, 256);
             drawHeight++;
         }
 
     }
 
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         this.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
         this.renderStats(pPoseStack, pPartialTick, pMouseX, pMouseY);
@@ -153,23 +161,21 @@ public class ThalgarathScreen extends Screen {
     }
 
     public static void renderEntityInInventory(int pPosX, int pPosY, int pScale, float pMouseX, float pMouseY, LivingEntity pLivingEntity) {
-        float f = (float)Math.atan((double)(pMouseX / 40.0F));
-        float f1 = (float)Math.atan((double)(pMouseY / 40.0F));
+        float f = (float)Math.atan(pMouseX / 40.0F);
+        float f1 = (float)Math.atan(pMouseY / 40.0F);
         renderEntityInInventoryRaw(pPosX, pPosY, pScale, f, f1, pLivingEntity);
     }
     public static void renderEntityInInventoryRaw(int pPosX, int pPosY, int pScale, float angleXComponent, float angleYComponent, LivingEntity pLivingEntity) {
-        float f = angleXComponent;
-        float f1 = angleYComponent;
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.pushPose();
-        posestack.translate((double)pPosX, (double)pPosY, 1050.0D);
+        posestack.translate(pPosX, pPosY, 1050.0D);
         posestack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
         PoseStack posestack1 = new PoseStack();
         posestack1.translate(0.0D, 0.0D, 1000.0D);
         posestack1.scale((float)pScale, (float)pScale, (float)pScale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
+        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(angleYComponent * 20.0F);
         quaternion.mul(quaternion1);
         posestack1.mulPose(quaternion);
         float f2 = pLivingEntity.yBodyRot;
@@ -177,9 +183,9 @@ public class ThalgarathScreen extends Screen {
         float f4 = pLivingEntity.getXRot();
         float f5 = pLivingEntity.yHeadRotO;
         float f6 = pLivingEntity.yHeadRot;
-        pLivingEntity.yBodyRot = 180.0F + f * 20.0F;
-        pLivingEntity.setYRot(180.0F + f * 40.0F);
-        pLivingEntity.setXRot(-f1 * 20.0F);
+        pLivingEntity.yBodyRot = 180.0F + angleXComponent * 20.0F;
+        pLivingEntity.setYRot(180.0F + angleXComponent * 40.0F);
+        pLivingEntity.setXRot(-angleYComponent * 20.0F);
         pLivingEntity.yHeadRot = pLivingEntity.getYRot();
         pLivingEntity.yHeadRotO = pLivingEntity.getYRot();
         Lighting.setupForEntityInInventory();

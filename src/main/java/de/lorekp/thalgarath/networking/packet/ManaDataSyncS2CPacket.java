@@ -1,7 +1,9 @@
 package de.lorekp.thalgarath.networking.packet;
 
 import de.lorekp.thalgarath.client.ClientManaData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -31,7 +33,8 @@ public class ManaDataSyncS2CPacket {
         context.enqueueWork(() -> {
             //clientside
             ClientManaData.setPlayerMana(mana);
-            ClientManaData.setMaxMana(maxMana);
+            if (this.maxMana != 0)
+                ClientManaData.setMaxMana(maxMana);
         });
         return true;
     }

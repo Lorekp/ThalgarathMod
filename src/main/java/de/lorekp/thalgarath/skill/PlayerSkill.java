@@ -1,8 +1,6 @@
 package de.lorekp.thalgarath.skill;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -10,8 +8,6 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 
 @AutoRegisterCapability
 public class PlayerSkill {
-
-    public static Capability<de.lorekp.thalgarath.skill.PlayerSkill> PLAYER_SKILL = CapabilityManager.get(new CapabilityToken<de.lorekp.thalgarath.skill.PlayerSkill>() { });
     private int[] skill = new int[8];
 
     public int[] getSkill(){
@@ -54,5 +50,9 @@ public class PlayerSkill {
         skill[5] = nbt.getInt("Intelligence");
         skill[6] = nbt.getInt("Awareness");
         skill[7] = nbt.getInt("Luck");
+    }
+
+    public void copyForRespawn(PlayerSkill oldStore) {
+        this.skill = oldStore.getSkill();
     }
 }

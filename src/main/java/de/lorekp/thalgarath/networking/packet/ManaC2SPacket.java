@@ -1,8 +1,9 @@
 package de.lorekp.thalgarath.networking.packet;
 
 import de.lorekp.thalgarath.mana.PlayerMana;
+import de.lorekp.thalgarath.mana.PlayerManaProvider;
 import de.lorekp.thalgarath.networking.ModMessages;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,8 +16,7 @@ public class ManaC2SPacket {
     private static float amountToAdd;
     private static float newMaxMana;
     public ManaC2SPacket(float amountToAdd, float newMaxMana){
-        if (newMaxMana!=0)
-            ManaC2SPacket.newMaxMana = newMaxMana;
+        ManaC2SPacket.newMaxMana = newMaxMana;
         ManaC2SPacket.amountToAdd = amountToAdd;
     }
     public ManaC2SPacket(FriendlyByteBuf buf){
@@ -34,9 +34,11 @@ public class ManaC2SPacket {
             //serverside
             ServerPlayer player = context.getSender();
 
-            player.getCapability(PlayerMana.PLAYER_MANA).ifPresent(mana -> {
+            assert player != null;
+            player.getCapability(PlayerManaProvider.PLAYER_MANA).ifPresent(mana -> {
                 mana.addMana(amountToAdd);
-                mana.setMAX_MANA(newMaxMana);
+                if (newMaxMana != 0)
+                    mana.setMAX_MANA(newMaxMana);
                 ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana(), mana.getMAX_MANA()), player);
             });
         });

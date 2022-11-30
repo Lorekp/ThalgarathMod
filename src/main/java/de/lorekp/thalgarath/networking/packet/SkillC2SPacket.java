@@ -3,6 +3,7 @@ package de.lorekp.thalgarath.networking.packet;
 import de.lorekp.thalgarath.mana.PlayerMana;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.skill.PlayerSkill;
+import de.lorekp.thalgarath.skill.PlayerSkillProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -32,7 +33,7 @@ public class SkillC2SPacket {
         context.enqueueWork(() -> {
             //serverside
             ServerPlayer player = context.getSender();
-            player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
+            player.getCapability(PlayerSkillProvider.PLAYER_SKILL).ifPresent(playerSkill -> {
                 playerSkill.addSkill(index);
                 ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(playerSkill.getSkill()), player);
             });
