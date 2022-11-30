@@ -19,6 +19,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -71,6 +72,11 @@ static int tickCounter = 0;
     }
 
     @SubscribeEvent
+    public static void onRegisterCommands(RegisterCommandsEvent event){
+
+    }
+
+    @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event){
         if(!event.isWasDeath()){
             event.getOriginal().getCapability(PlayerMana.PLAYER_MANA).ifPresent(oldStore -> {
@@ -91,7 +97,8 @@ static int tickCounter = 0;
         if(event.side == LogicalSide.SERVER){
             //adjust player attackspeed(1%perlvl)
             event.player.getCapability(PlayerSkill.PLAYER_SKILL).ifPresent(playerSkill -> {
-                event.player.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(4 + playerSkill.getSkillAt(1) * 0.01F);
+                event.player.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(4 + (playerSkill.getSkillAt(1) * 0.01F) * 4);
+                event.player.getAttribute(Attributes.LUCK).setBaseValue(0.01F * playerSkill.getSkillAt(7));
             });
             //every second (all players):
             if (tickCounter % 20 == 0)
