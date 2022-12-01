@@ -10,6 +10,8 @@ import de.lorekp.thalgarath.networking.packet.SkillDataSyncS2CPacket;
 import de.lorekp.thalgarath.skill.PlayerSkill;
 import de.lorekp.thalgarath.skill.PlayerSkillProvider;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -46,7 +48,6 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event){
-
     }
 
     @SubscribeEvent

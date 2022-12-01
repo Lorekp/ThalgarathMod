@@ -97,6 +97,7 @@ public class ThalgarathScreen extends Screen {
         //WindButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 10, this.topPos + 87, 50, 21, 106, 172, BUTTONS_LOCATION, pButton -> {
             Minecraft.getInstance().player.sendSystemMessage(Component.literal("WindButton").withStyle(ChatFormatting.AQUA));
+            Minecraft.getInstance().setScreen(new WindScreen(Component.literal("WindScreen")));
         }));
         //WaterButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 63, this.topPos + 87, 50, 21, 156, 172, BUTTONS_LOCATION, pButton -> {
