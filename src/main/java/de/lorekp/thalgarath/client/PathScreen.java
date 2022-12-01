@@ -46,6 +46,10 @@ public class PathScreen extends Screen {
         }
     }
 
+    protected void renderTooltip(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick){
+
+    }
+
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -66,19 +70,13 @@ public class PathScreen extends Screen {
 
     public void initWindScreen(){
         //Fire apprentice
-        this.addRenderableWidget(new ImageButton(this.leftPos + 117, this.topPos + 10, 22, 22, 234, 0,100,  PATH_BUTTONS,256,256, new Button.OnPress() {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 117, this.topPos + 10, 22, 22, 234, 0,100,  PATH_BUTTONS,new Button.OnPress() {
             @Override
             public void onPress(Button pButton) {
                 assert Minecraft.getInstance().player != null;
                 Minecraft.getInstance().player.sendSystemMessage(Component.literal("Fire Apprentice").withStyle(ChatFormatting.DARK_RED));
             }
-        }, new Button.OnTooltip(){
-            @Override
-            public void onTooltip(Button pButton, PoseStack pPoseStack, int xMouse, int yMouse) {
-                Component component = Component.literal("shrek");
-                PathScreen.renderTooltip(pPoseStack, ChatReportScreen.this.font.split(component, Math.max(ChatReportScreen.this.width / 2 - 43, 170)), xMouse, yMouse);
-            }
-        }, Component.literal("Fire Apprentice")));
+        }));
 
     }
 }
