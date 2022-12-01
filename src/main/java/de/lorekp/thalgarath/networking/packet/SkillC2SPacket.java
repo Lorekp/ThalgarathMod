@@ -35,7 +35,7 @@ public class SkillC2SPacket {
             ServerPlayer player = context.getSender();
             player.getCapability(PlayerSkillProvider.PLAYER_SKILL).ifPresent(playerSkill -> {
                 playerSkill.addSkill(index);
-                ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(playerSkill.getSkill()), player);
+                ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(playerSkill.getSkill(), playerSkill.getPlayerPath()), player);
             });
         });
         return true;

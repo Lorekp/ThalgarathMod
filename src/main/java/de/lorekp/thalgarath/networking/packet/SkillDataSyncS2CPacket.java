@@ -9,30 +9,30 @@ import java.util.function.Supplier;
 public class SkillDataSyncS2CPacket {
     private int[] skill = new int[8];
 
-    public SkillDataSyncS2CPacket(int[] skill){
+    private boolean[][] playerPath = new boolean[6][20];
+
+    public SkillDataSyncS2CPacket(int[] skill, boolean[][] playerPath){
         this.skill = skill;
+        this.playerPath = playerPath;
     }
     public SkillDataSyncS2CPacket(FriendlyByteBuf buf){
-        this.skill[0] = buf.readInt();
-        this.skill[1] = buf.readInt();
-        this.skill[2] = buf.readInt();
-        this.skill[3] = buf.readInt();
-        this.skill[4] = buf.readInt();
-        this.skill[5] = buf.readInt();
-        this.skill[6] = buf.readInt();
-        this.skill[7] = buf.readInt();
+        for (int i = 0; i < 8; i++)
+            this.skill[i] = buf.readInt();
+        for (int i = 0; i < 6; i++)
+            for (int j = 0; j <20; j++)
+                this.playerPath[i][j] = buf.readBoolean();
     }
 
     public void toBytes(FriendlyByteBuf buf){
         if (skill != null) {
-            buf.writeInt(skill[0]);
-            buf.writeInt(skill[1]);
-            buf.writeInt(skill[2]);
-            buf.writeInt(skill[3]);
-            buf.writeInt(skill[4]);
-            buf.writeInt(skill[5]);
-            buf.writeInt(skill[6]);
-            buf.writeInt(skill[7]);
+            for (int i = 0; i < 8; i++)
+                buf.writeInt(this.skill[i]);
+
+        }
+        if (playerPath != null){
+            for (int i = 0; i < 6; i++)
+                for (int j = 0; j <20; j++)
+                    buf.writeBoolean(this.playerPath[i][j]);
         }
     }
 
@@ -42,7 +42,7 @@ public class SkillDataSyncS2CPacket {
         context.enqueueWork(() -> {
             //clientside
             ClientSkillData.setPlayerSkill(skill);
-
+            ClientSkillData.setPlayerPath(playerPath);
         });
         return true;
     }

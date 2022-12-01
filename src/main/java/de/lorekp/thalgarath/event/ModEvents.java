@@ -112,7 +112,7 @@ public class ModEvents {
                 });
 
                 player.getCapability(PlayerSkillProvider.PLAYER_SKILL).ifPresent(skill -> {
-                    ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(skill.getSkill()), player);
+                    ModMessages.sendToPlayer(new SkillDataSyncS2CPacket(skill.getSkill(), skill.getPlayerPath()), player);
                 });
             }
         }

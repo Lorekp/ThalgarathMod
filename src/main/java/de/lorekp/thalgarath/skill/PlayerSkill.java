@@ -8,6 +8,8 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 
 @AutoRegisterCapability
 public class PlayerSkill {
+
+    private boolean[][] playerPath = new boolean[6][20];
     private int[] skill = new int[8];
 
     public int[] getSkill(){
@@ -25,8 +27,18 @@ public class PlayerSkill {
         else
             this.skill[index] = this.skill[index] + 1;
     }
+
+    public boolean[][] getPlayerPath() {
+        return playerPath;
+    }
+
+    public boolean getPlayerPathAt(int pathType, int index) {
+        return playerPath[pathType][index];
+    }
+
     public void copyFrom(de.lorekp.thalgarath.skill.PlayerSkill source){
         this.skill = source.skill;
+        this.playerPath = source.playerPath;
     }
 
     public void saveNBTData(CompoundTag nbt){
@@ -38,7 +50,12 @@ public class PlayerSkill {
         nbt.putInt("Intelligence", skill[5]);
         nbt.putInt("Awareness", skill[6]);
         nbt.putInt("Luck", skill[7]);
-
+        nbt.putBoolean("Wind Apprentice", playerPath[0][0]);
+        nbt.putBoolean("Water Apprentice", playerPath[1][0]);
+        nbt.putBoolean("Fire Apprentice", playerPath[2][0]);
+        nbt.putBoolean("Earth Apprentice", playerPath[3][0]);
+        nbt.putBoolean("Light Apprentice", playerPath[4][0]);
+        nbt.putBoolean("Dark Apprentice", playerPath[5][0]);
     }
 
     public void loadNBTData(CompoundTag nbt){
@@ -50,9 +67,18 @@ public class PlayerSkill {
         skill[5] = nbt.getInt("Intelligence");
         skill[6] = nbt.getInt("Awareness");
         skill[7] = nbt.getInt("Luck");
+        playerPath[0][0] = nbt.getBoolean("Wind Apprentice");
+        playerPath[1][0] = nbt.getBoolean("Water Apprentice");
+        playerPath[2][0] = nbt.getBoolean("Fire Apprentice");
+        playerPath[3][0] = nbt.getBoolean("Earth Apprentice");
+        playerPath[4][0] = nbt.getBoolean("Light Apprentice");
+        playerPath[5][0] = nbt.getBoolean("Dark Apprentice");
     }
 
     public void copyForRespawn(PlayerSkill oldStore) {
         this.skill = oldStore.getSkill();
+        this.playerPath = oldStore.getPlayerPath();
     }
+
+
 }
