@@ -70,13 +70,18 @@ public class PathScreen extends Screen {
 
     public void initWindScreen(){
         //Fire apprentice
-        this.addRenderableWidget(new ImageButton(this.leftPos + 117, this.topPos + 10, 22, 22, 234, 0,100,  PATH_BUTTONS,new Button.OnPress() {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 117, this.topPos + 10, 22, 22, 234, 0,100,  PATH_BUTTONS, 256, 256,new Button.OnPress() {
             @Override
             public void onPress(Button pButton) {
                 assert Minecraft.getInstance().player != null;
                 Minecraft.getInstance().player.sendSystemMessage(Component.literal("Fire Apprentice").withStyle(ChatFormatting.DARK_RED));
             }
-        }));
+        }, new Button.OnTooltip() {
+            @Override
+            public void onTooltip(Button pButton, PoseStack pPoseStack, int pMouseX, int pMouseY) {
+
+            }
+        }, Component.literal("Fire Apprentice")));
 
     }
 }
