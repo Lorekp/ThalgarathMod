@@ -54,7 +54,6 @@ public class PathScreen extends Screen {
     }
 
     protected void renderTooltip(PoseStack poseStack, float xMouse, float yMouse){
-        VillagePools
     }
 
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
