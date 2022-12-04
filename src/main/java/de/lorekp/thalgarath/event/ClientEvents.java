@@ -31,21 +31,12 @@ public class ClientEvents {
         private static final ResourceLocation TABS_LOCATION = new ResourceLocation(ThalgarathMain.MOD_ID, "textures/gui/inventory_buttons.png");
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event){
-            if(Minecraft.getInstance().screen instanceof ChatScreen && KeyBinding.KEY_ACTIVATE_VOICE.consumeClick()) {
-                boolean state = KeyboardUtils.isPressed(96);
-                if (state != pressed){
-                    pressed = state;
-                }
-
-                event.setCanceled(true);
-                if (state && (t ==null || !t.isRunning())){
+            if(KeyBinding.EXAMPLE_KEY.consumeClick()){
+                pressed = !pressed;
+                if ((t ==null || !t.isRunning())){
                     t = new Transcriber();
                     t.start();
                 }
-            }
-            if(KeyBinding.EXAMPLE_KEY.consumeClick()){
-                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Pressed \"O\" Key!"));
-                ModMessages.sendToServer(new ManaC2SPacket(1, 0));
             }
 
         }
@@ -65,6 +56,10 @@ public class ClientEvents {
                 event.getScreen().renderables.add(dInvButton);
                 event.addListener(dInvButton);
             }
+        }
+
+        public static boolean getPressed(){
+            return pressed;
         }
 
     }
