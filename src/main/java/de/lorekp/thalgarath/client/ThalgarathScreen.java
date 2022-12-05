@@ -36,6 +36,11 @@ public class ThalgarathScreen extends Screen {
         super(pTitle);
     }
 
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
     protected void init(){
         super.init();
         this.leftPos = (this.width - 176) / 2;

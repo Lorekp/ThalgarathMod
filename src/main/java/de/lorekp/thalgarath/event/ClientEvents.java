@@ -1,22 +1,20 @@
 package de.lorekp.thalgarath.event;
 
-import com.sun.jna.platform.KeyboardUtils;
 import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.client.ManaHudOverlay;
 import de.lorekp.thalgarath.client.ThalgarathScreen;
 import de.lorekp.thalgarath.client.Transcriber;
-import de.lorekp.thalgarath.networking.ModMessages;
-import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.util.KeyBinding;
-import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 

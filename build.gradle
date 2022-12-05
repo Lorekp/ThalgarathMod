@@ -165,6 +165,10 @@ dependencies {
 
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
+    dependsOn configurations.library
+    from {
+        configurations.library.collect { it.isDirectory()?it:zipTree(it) }
+    }
     manifest {
         attributes([
                 "Specification-Title"     : "thalgarath",
