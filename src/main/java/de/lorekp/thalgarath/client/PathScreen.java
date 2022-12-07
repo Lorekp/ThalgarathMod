@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.data.worldgen.VillagePools;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,14 +33,19 @@ public class PathScreen extends Screen {
 
     protected void init() {
         super.init();
-        this.leftPos = (this.width - 176) / 2;
-        this.topPos = (this.height - 166) / 2;
+        this.leftPos = (this.width - 256) / 2;
+        this.topPos = (this.height - 256) / 2;
         switch (pathType) {
             case 0:
                 initWindScreen();
         }
         for(int i = 0; i < 20; i++)
             this.addRenderableWidget(buttons[i]);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
