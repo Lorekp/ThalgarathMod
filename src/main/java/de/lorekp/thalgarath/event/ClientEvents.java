@@ -2,7 +2,7 @@ package de.lorekp.thalgarath.event;
 
 import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.client.ManaHudOverlay;
-import de.lorekp.thalgarath.client.ThalgarathScreen;
+import de.lorekp.thalgarath.client.gui.ThalgarathScreen;
 import de.lorekp.thalgarath.client.Transcriber;
 import de.lorekp.thalgarath.util.KeyBinding;
 import net.minecraft.client.Minecraft;

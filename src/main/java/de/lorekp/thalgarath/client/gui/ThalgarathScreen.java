@@ -1,4 +1,4 @@
-package de.lorekp.thalgarath.client;
+package de.lorekp.thalgarath.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -6,12 +6,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import de.lorekp.thalgarath.ThalgarathMain;
+import de.lorekp.thalgarath.client.ClientSkillData;
+import de.lorekp.thalgarath.client.gui.PathScreen;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.networking.packet.SkillC2SPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -55,9 +56,11 @@ public class ThalgarathScreen extends Screen {
 
         //SkillButtons:
         //StrengthButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, 100, BUTTONS_LOCATION, 256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(0));
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            this.renderTooltip(pPoseStack, Component.literal("test"), pMouseX, pMouseY);
+        }, Component.empty()));
         //DexterityButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 78, this.topPos + 27, 17, 15, 128, 0, BUTTONS_LOCATION, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(1));
