@@ -21,8 +21,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 public class ThalgarathScreen extends Screen {
 
@@ -56,10 +59,13 @@ public class ThalgarathScreen extends Screen {
 
         //SkillButtons:
         //StrengthButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, 100, BUTTONS_LOCATION, 256, 256, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, 17, BUTTONS_LOCATION, 256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(0));
         }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
-            this.renderTooltip(pPoseStack, Component.literal("test"), pMouseX, pMouseY);
+            if (!Objects.requireNonNull(this.getMinecraft().player).isShiftKeyDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Strength"), Component.nullToEmpty("\u00A77Hold \u00A7r\u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Strength"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
         }, Component.empty()));
         //DexterityButton
         this.addRenderableWidget(new ImageButton(this.leftPos + 78, this.topPos + 27, 17, 15, 128, 0, BUTTONS_LOCATION, pButton -> {
