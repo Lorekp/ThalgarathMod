@@ -8,6 +8,7 @@ import com.mojang.math.Vector3f;
 import de.lorekp.thalgarath.ThalgarathMain;
 import de.lorekp.thalgarath.client.ClientSkillData;
 import de.lorekp.thalgarath.client.gui.PathScreen;
+import de.lorekp.thalgarath.event.ClientEvents;
 import de.lorekp.thalgarath.networking.ModMessages;
 import de.lorekp.thalgarath.networking.packet.ManaC2SPacket;
 import de.lorekp.thalgarath.networking.packet.SkillC2SPacket;
@@ -62,50 +63,85 @@ public class ThalgarathScreen extends Screen {
         this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 9, 16, 17, 112, 0, 17, BUTTONS_LOCATION, 256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(0));
         }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
-            if (!Objects.requireNonNull(this.getMinecraft().player).isShiftKeyDown())
-                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Strength"), Component.nullToEmpty("\u00A77Hold \u00A7r\u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Strength"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
             else
                 this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Strength"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
         }, Component.empty()));
         //DexterityButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 78, this.topPos + 27, 17, 15, 128, 0, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 78, this.topPos + 27, 17, 15, 128, 0, 15, BUTTONS_LOCATION, 256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(1));
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Dexterity"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Dexterity"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
+        }, Component.empty()));
         //EnduranceButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 44, 16, 15, 145, 0, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 79, this.topPos + 44, 16, 15, 145, 0, 15,  BUTTONS_LOCATION, 256, 256, pButton -> {
             if (ClientSkillData.getPlayerSkillAt(2) < 100)
                 ModMessages.sendToServer(new SkillC2SPacket(2));
             else {
                 assert Minecraft.getInstance().player != null;
                 Minecraft.getInstance().player.sendSystemMessage(Component.literal("Max Endurance of 100 reached!").withStyle(ChatFormatting.DARK_RED));
             }
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Endurance"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else if (ClientSkillData.getPlayerSkillAt(2) < 100)
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Endurance"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
+            else if (ClientSkillData.getPlayerSkillAt(2) > 100)
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Endurance"), Component.nullToEmpty("MAX ENDURANCE OF 100 REACHED")), Optional.empty(), pMouseX, pMouseY);
+        }, Component.empty()));
         //DefenseButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 60, 14, 16, 161, 0, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 60, 14, 16, 161, 0, 16, BUTTONS_LOCATION, 256, 256,pButton -> {
             if (ClientSkillData.getPlayerSkillAt(3) < 100)
                 ModMessages.sendToServer(new SkillC2SPacket(3));
-            else {
-                assert Minecraft.getInstance().player != null;
-                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Max Defense of 100 reached!").withStyle(ChatFormatting.DARK_RED));
-            }
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Defense"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else if (ClientSkillData.getPlayerSkillAt(3) < 100)
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Defense"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
+            else if (ClientSkillData.getPlayerSkillAt(3) > 100)
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Defense"), Component.nullToEmpty("MAX DEFENSE OF 100 REACHED")), Optional.empty(), pMouseX, pMouseY);
+        }, Component.empty()));
         //WisdomButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 10, 16, 12, 112, 34, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 10, 16, 12, 112, 34, 12, BUTTONS_LOCATION, 256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(4));
             ModMessages.sendToServer(new ManaC2SPacket(0, 100 + ClientSkillData.getPlayerSkillAt(4)));
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Wisdom"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Wisdom"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
+        }, Component.empty()));
         //IntelligenceButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 25, 16, 15, 128, 30, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 25, 16, 15, 128, 30, 15, BUTTONS_LOCATION, 256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(5));
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Intelligence"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Intelligence"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
+        }, Component.empty()));
         //AwarenessButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 42, 16, 16, 144, 30, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 123, this.topPos + 42, 16, 16, 144, 30, 16, BUTTONS_LOCATION, 256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(6));
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Awareness"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Awareness"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
+        }, Component.empty()));
         //LuckButton
-        this.addRenderableWidget(new ImageButton(this.leftPos + 124, this.topPos + 59, 13, 17, 160, 32, BUTTONS_LOCATION, pButton -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 124, this.topPos + 59, 13, 17, 160, 32, 17, BUTTONS_LOCATION,256, 256, pButton -> {
             ModMessages.sendToServer(new SkillC2SPacket(7));
-        }));
+        }, (pButton, pPoseStack, pMouseX, pMouseY) -> {
+            if (!Screen.hasShiftDown())
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Luck"), Component.nullToEmpty("\u00A77Hold \u00A7eShift \u00A7r\u00A77for more information")), Optional.empty(), pMouseX, pMouseY);
+            else
+                this.renderTooltip(pPoseStack, Arrays.asList(Component.nullToEmpty("Luck"), Component.nullToEmpty("SHIFTDAUN")), Optional.empty(), pMouseX, pMouseY);
+        }, Component.empty()));
 
         //PathButtons:
         //WindButton

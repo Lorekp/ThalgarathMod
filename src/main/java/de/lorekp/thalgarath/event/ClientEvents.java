@@ -15,13 +15,14 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.settings.KeyMappingLookup;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.glfw.GLFW;
 
 public class ClientEvents {
     @Mod.EventBusSubscriber(modid = ThalgarathMain.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
-
 
         private static boolean pressed = false;
         private static volatile Transcriber t;
@@ -59,6 +60,7 @@ public class ClientEvents {
         public static boolean getPressed(){
             return pressed;
         }
+
 
     }
 

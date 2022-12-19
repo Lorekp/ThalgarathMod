@@ -15,4 +15,5 @@ public class KeyBinding {
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, KEY_CATEGORY_THALGARATH);
 
     public static final KeyMapping KEY_ACTIVATE_VOICE = new KeyMapping(A_KEY, 96, KEY_CATEGORY_THALGARATH);
+
 }
